@@ -59,6 +59,36 @@ kafka-console-producer --topic ACLS --bootstrap-server node3.kafka:9092 --produc
 <img src="https://res.cloudinary.com/dvehyvk3d/image/upload/v1728899591/aliceproduce_pm1znm.jpg" alt="" />
 
 
-Untuk user <b>Bob</b> yang hanya bisa consume dan tidak bisa produce,
+Untuk user <b>Bob</b> yang hanya bisa consume dan tidak bisa produce, add command berikut :
+```bash
+kafka-configs --bootstrap-server node2.kafka:9092 --alter --add-config 'SCRAM-SHA-256=<your_password>' --entity-type users --entity-name bob --command-config client.properties
+```
 
+Berikut isi dari file bob.properties
+```bash
+bootstrap.servers=node3.kafka:9092
+
+security.protocol=SASL_SSL
+
+# SSL settings for secure communication
+ssl.truststore.location=/var/ssl/private/kafka.server.truststore.jks
+ssl.truststore.password=confluent
+
+sasl.mechanism=SCRAM-SHA-256
+
+key.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+value.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+
+# JAAS Configuration
+sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="bob" password="bobsatu";
+
+authorizer.class.name=kafka.security.authorizer.AclAuthorizer
+```
+
+Tambahkan hak akses READ untuk user Bob:
+```bash
+kafka-acls --bootstrap-server node2.kafka:9092 --add --allow-principal Group:test-consumer-group --operation READ --topic ACLS --command-config client.properties
+```
+
+Berikut ilustrasi produce-consume:
 <img src="https://res.cloudinary.com/dvehyvk3d/image/upload/v1728893315/image_awc87f.png" alt="image" />
