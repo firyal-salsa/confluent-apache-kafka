@@ -1,4 +1,4 @@
-# Configuring ACLS
+# Configuring ACLs
 Menggunakan ACL untuk authorization, dengan skenario sebagai berikut : <br>
   <ul>
     <li>user alice hanya bisa produce, tidak bisa consume</li>
