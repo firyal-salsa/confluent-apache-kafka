@@ -3,11 +3,11 @@
   <img src="https://res.cloudinary.com/dvehyvk3d/image/upload/v1730172698/confluent-images_bruliy.png" width="50%"/>
 </h3>
 
-> Security is an aspect of the system that must be addressed for the system as a whole, rather than component by component. The security of a system is only as strong as the weakest link, and security processes and policies must be enforced across the system, including the underlying platform. The customizable security features in Kafka enable integration with existing security infrastructure to build a consistent security model that applies to the entire system. (Kafka The Definitive Guide, 265)
+> Security is an aspect of the system that must be addressed for the system as a whole, rather than component by component. The security of a system is only as strong as the weakest link, and security processes and policies must be enforced across the system, including the underlying platform. The customizable security features in Kafka enable integration with existing security infrastructure to build a consistent security model that applies to the entire system. (Kafka The Definitive Guide, hal 265)
 
 <br>
 
-Repositori ini berisi tata cara instalasi confluent apache kafka, penggunaan setiap services yang ada di confluent, pemasangan security, sampai dengan pengujian security. Untuk mencegah penyadapan data dan memodifikasi data tanpa izin, maka pemasangan security menggunakan standar SSL (Secure Socket Layer) dan SASL (Simple Authentication and Security Layer) diperlukan untuk melindungi data dari sisi client maupun server. Ada beberapa cara untuk melindungi data, yaitu dengan cara GSSAPI, OAUTHBREAKER, SCRAM-SHA 256 dan SCRAM-SHA-512. Pada kesempatan kali ini, kita akan uji coba menggunakan SCRAM-SHA 256 yang mana user perlu menginput kredensial seperti username dan password untuk mengakses service tertentu.
+Repositori ini menyediakan panduan instalasi confluent apache kafka, penggunaan setiap services yang ada di confluent, pemasangan security, sampai dengan pengujian security. Untuk mencegah penyadapan data dan memodifikasi data tanpa izin, maka pemasangan security menggunakan standar SSL (Secure Socket Layer) dan SASL (Simple Authentication and Security Layer) diperlukan untuk melindungi data dari sisi client maupun server. Ada beberapa cara untuk melindungi data, yaitu dengan cara GSSAPI, OAUTHBREAKER, SCRAM-SHA 256 dan SCRAM-SHA-512. Pada kesempatan kali ini, kita akan uji coba menggunakan SCRAM-SHA 256 yang mana user perlu menginput kredensial seperti username dan password untuk mengakses service tertentu.
 
 Contoh kasus :
 <ul>
