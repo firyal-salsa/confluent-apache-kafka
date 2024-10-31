@@ -7,13 +7,14 @@
 
 <br>
 
-Repositori ini menyediakan panduan instalasi confluent apache kafka, penggunaan setiap services yang ada di confluent, pemasangan security, sampai dengan pengujian security. Untuk mencegah penyadapan data dan memodifikasi data tanpa izin, maka pemasangan security menggunakan standar SSL (Secure Socket Layer) dan SASL (Simple Authentication and Security Layer) diperlukan untuk melindungi data dari sisi client maupun server. Ada beberapa cara untuk melindungi data, yaitu dengan cara GSSAPI, OAUTHBREAKER, SCRAM-SHA 256 dan SCRAM-SHA-512. Pada kesempatan kali ini, kita akan uji coba menggunakan SCRAM-SHA 256 yang mana user perlu menginput kredensial seperti username dan password untuk mengakses service tertentu.
+Repositori ini menyediakan panduan instalasi confluent apache kafka, konfigurasi keamanan, pengujian keamanan, sampai penggunaan setiap services yang ada di confluent. Untuk mencegah penyadapan data dan memodifikasi data tanpa izin, maka pemasangan security menggunakan standar SSL (Secure Socket Layer) dan SASL (Simple Authentication and Security Layer) diperlukan untuk melindungi data dari sisi client maupun server. SSL mengenkripsi message selama transmisi, sementara SASL memberikan mekanisme otentikasi. Ada beberapa cara untuk otentikasi menggunakan SASL, yaitu dengan cara GSSAPI, OAUTHBREAKER, SCRAM-SHA-256 dan SCRAM-SHA-512. Pada kesempatan kali ini, kita akan uji coba menggunakan SCRAM-SHA 256 yang mana user perlu menginput kredensial seperti username dan password untuk mengakses service tertentu. Metode ini menggabungkan hashing dengan salting untuk meningkatkan keamanan.
 
-Contoh kasus :
+Penggunaan metode SCRAM-SHA-256 sangat cocok digunakan untuk excercise di 3 VM di 1 cluster karena belum tahap production. Berikut contoh kasus :
 <ul>
-  <li>Administrator adalah super user, yang berarti user ini bisa membaca dan memodifikasi data</li>
+  <li>Administrator adalah super user, yang berarti user ini memiliki hak akses penuh seperti membaca dan memodifikasi data</li>
   <li>Alice hanya bisa produce / menginput data</li>
   <li>Bob hanya bisa consume atau read data</li>
+   Alice dan Bob memiliki akses terbatas untuk mencegah potensi penyalahgunaan
 </ul>
 
 
