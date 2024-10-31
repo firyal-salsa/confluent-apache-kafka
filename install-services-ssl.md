@@ -197,17 +197,26 @@ touch /data/zookeeper/myid
 ```
 
 Penjelasan lebih lanjut terkait properties yang digunakan dalam services, ssl.properties merupakan properties yang wajib digunakan. Ketika kita sudah memasang keystore dan trustore, maka kita harus menyertakan properties berikut untuk komunikasi inter-broker atau jika autentikasi client diperbolehkan.
-
 ```bash
 ssl.keyStore.location=/var/ssl/private/kafka.server.keystore.jks
 ssl.keyStore.password=confluent
 ssl.trustStore.location=/var/ssl/private/kafka.server.truststore.jks
 ssl.trustStore.password=confluent
 ```
-
-### Zookeeper
+Khusus untuk service zookeeper, kita cukup mendeklarasikan ssl properties seperti diatas, tetapi ada sedikit perbedaan untuk services lain.
 
 ### Broker
+```bash
+#### Kafka broker as server to other broker and client
+zookeeper.clientCnxnSocket=org.apache.zookeeper.ClientCnxnSocketNetty
+zookeeper.ssl.client.enable=true
+zookeeper.ssl.protocol=TLSv1.2
+zookeeper.ssl.truststore.location=/var/ssl/private/kafka.server.truststore.jks
+zookeeper.ssl.truststore.password=confluent
+zookeeper.ssl.keystore.location=/var/ssl/private/kafka.server.keystore.jks
+zookeeper.ssl.keystore.password=confluent
+ssl.key.password=confluent
+```
 
 ### Schema Registry
 
