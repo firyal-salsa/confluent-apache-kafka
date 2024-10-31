@@ -1,27 +1,72 @@
-# Confluent Apache Kafka 
-Dari proses instalasi, memasang SSL, SASL, sampai mengakses suatu topic dengan ACLs
+# Instalasi Services
+Berikut panduan instalasi services seperti zookeeper, broker, kafka connect distributed, schema registry, rest, dan ksql serta pemasangan SASL SSL untuk setiap services.
 
+## Install Confluent Apache Kafka
+Dengan mengggunakan confluent, Administrator dapat menginstall semua services tanpa perlu repot-repot menginstall satu persatu. Berikut instalasi confluent menggunakan Ubuntu dan Rocky :
+### Instalasi Confluent di Ubuntu
+Saat ini confluent belum support ubuntu versi 24 atau noble, versi yang compatible adalah sebagai berikut : <br>
 
-## Install
+<div align="center">
+ <img src="https://res.cloudinary.com/dvehyvk3d/image/upload/v1730379972/osrequirement_t4texo.jpg" align="center" width="60%" /> <br>
+Source : <a href="https://docs.confluent.io/platform/current/installation/system-requirements.html#:~:text=Confluent%20Platform%20is%20supported%20on,Linux%20and%20Ubuntu%20Operating%20Systems">Confluent</a>
+</div>
+<br>
+Jika hanya memiliki ubuntu versi terbaru, maka ubah file berikut <br>
 
-Menggunakan Ubuntu 
 ```bash
 sudo nano /etc/apt/sources.list.d/archive_uri-https_packages_confluent_io_clients_deb-noble.list
 ```
-ubah noble menjadi focal
+
+Ubah kata 'noble' menjadi 'focal', mengubah file ini bukan berarti downgrade sistem secara keseluruhan, hanya  mengubah repositori sumber paket untuk Confluent.
+<br>
+Sekarang kita akan menginstall confluent menggunakan systemd di ubuntu, berikut langkah-langkahnya:
+1. Instal public key Confluent. Kunci ini digunakan untuk menandatangani paket di repositori APT.
+```bash
+wget -qO - https://packages.confluent.io/deb/7.7/archive.key | sudo apt-key add -
+```
+2. Tambahkan repositori ke /etc/apt/sources.list dengan menjalankan perintah ini:
+```bash
+sudo add-apt-repository "deb [arch=amd64] https://packages.confluent.io/deb/7.7 stable main"
+sudo add-apt-repository "deb https://packages.confluent.io/clients/deb $(lsb_release -cs) main"
+```
+3. Update apt-get dan install services confluent dengan RBAC
 ```bash
 sudo apt-get update && \
 sudo apt-get install confluent-platform && \
 sudo apt-get install confluent-security
 ```
-
-
-Menggunakan RHEL / CentOs / Rocky / Amazon Linux
-```bash
-sudo yum clean all && \
-sudo yum install confluent-platform && \
-sudo yum install confluent-security
-```
+### Instalasi Confluent di Rocky 8
+Berikut panduan install confluent menggunakan systemd di Rocky
+1. Install curl dan which
+   ```bash
+   sudo yum install curl which
+   ```
+3. Install confluent platform menggunakan public key
+   ```bash
+   sudo rpm --import https://packages.confluent.io/rpm/7.7/archive.key
+   ```
+5. Di path /etc/yum.repos.d/ tambahkan file confluent.repo yang berisi
+   ```bash
+   [Confluent]
+   name=Confluent repository
+   baseurl=https://packages.confluent.io/rpm/7.7
+   gpgcheck=1
+   gpgkey=https://packages.confluent.io/rpm/7.7/archive.key
+   enabled=1
+   
+   [Confluent-Clients]
+   name=Confluent Clients repository
+   baseurl=https://packages.confluent.io/clients/rpm/centos/$releasever/$basearch
+   gpgcheck=1
+   gpgkey=https://packages.confluent.io/clients/rpm/archive.key
+   enabled=1
+   ```
+7. Bersihkan caches YUM dan install confluent platform dengan RBAC
+  ```bash
+  sudo yum clean all && \
+  sudo yum install confluent-platform && \
+  sudo yum install confluent-security
+  ```
 
 
 ## Memasang SSL 
