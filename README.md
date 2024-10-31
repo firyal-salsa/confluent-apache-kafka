@@ -20,7 +20,7 @@ Penggunaan metode SCRAM-SHA-256 sangat cocok digunakan untuk excercise di 3 VM d
 
 ## Daftar Isi
 <ol>
-  <li><a href="https://github.com/firyal-salsa/confluent-apache-kafka/blob/main/install-zookeeper-broker-ssl.md">Instalasi Confluent Kafka menggunakan Linux Ubuntu & Rocky serta memasang SSL</a></li>
+  <li><a href="https://github.com/firyal-salsa/confluent-apache-kafka/blob/main/install-services-ssl.md">Instalasi Confluent Kafka menggunakan Linux Ubuntu & Rocky serta memasang SSL</a></li>
   <li>Konfigurasi produce - consume message menggunakan ACLs </li>
   <li>Mengamankan beberapa services yang ada di confluent control center menggunakan SCRAM-SHA-256</li>
   <li>Mengoperasikan Kafka Connect</li>
