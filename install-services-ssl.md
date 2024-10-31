@@ -68,14 +68,42 @@ Berikut panduan install confluent menggunakan systemd di Rocky
   sudo yum install confluent-security
   ```
 
+### Memastikan services berjalan
+Untuk mengetahui list services yang tersedia, gunakan perintah berikut
+```bash
+systemctl list-units --type=service --all
+```
+Untuk mengetahui deskripsi suatu services, gunakan perintah berikut
+```bash
+systemctl status confluent-zookeeper.service
+```
+status bisa diganti dengan start, restart, dan stop sesuai dengan kebutuhan
+
+Jika sudah di start, cek portnya dengan perintah berikut
+```bash
+netstat -tunlp
+```
+Secara default, berikut masing-masing port yang ada di confluent:
+
+| Service                  | Default Port | Description                                         |
+|--------------------------|--------------|-----------------------------------------------------|
+| Kafka Broker             | 9092         | Port untuk berkomunikasi dengan Kafka clients.      |
+| Zookeeper                | 2181         | Port default untuk komunikasi Zookeeper.            |
+| Kafka REST Proxy         | 8082         | API REST untuk berkomunikasi dengan Kafka.          |
+| Schema Registry          | 8081         | Menyimpan dan menyediakan akses ke schema.          |
+| Confluent Control Center | 9021         | UI untuk mengelola dan memonitor Kafka cluster.     |
+| Kafka Connect            | 8083         | Digunakan untuk integrasi data dari/ke Kafka.       |
+| ksqlDB Server            | 8088         | Layanan ksqlDB untuk pemrosesan data streaming.     |
+
 
 ## Memasang SSL 
-
-Pastikan di file /etc/host/ sudah terdefinisi setiap node beserta toolsnya : <br>
+Pada contoh kasus kali ini, terdapat tiga instances / virtual machines dalam satu cluster. Dalam memasang SSL, langkah awal yang harus dipersiapkan adalah memuat key store dan trust store untuk server dan juga client menggunakan self-signed CA. 
+Pastikan di file /etc/hosts sudah terdefinisi setiap node beserta toolsnya : <br>
 <nama_ip> node1.zookeeper node1.kafka node1.schema node1.connect node1.ksql node1.rest <br>
 <nama_ip> node2.zookeeper node2.kafka node2.schema node2.connect node2.ksql node2.rest node2.cc <br>
 <nama_ip> node3.zookeeper node3.kafka node3.schema node3.connect node3.ksql node3.rest <br>
 
+1. 
 ```bash
 sudo openssl req -new -x509 -keyout ca-root.key -out ca-root.crt -days 365 -subj '/CN=server/OU=FS/O=ADI/L=JAKBA
 R/ST=DKI/C=ID' -passin pass:confluent -passout pass:confluent
