@@ -103,12 +103,12 @@ Pastikan di file /etc/hosts sudah terdefinisi setiap node beserta toolsnya : <br
 <nama_ip> node2.zookeeper node2.kafka node2.schema node2.connect node2.ksql node2.rest node2.cc <br>
 <nama_ip> node3.zookeeper node3.kafka node3.schema node3.connect node3.ksql node3.rest <br>
 
-1. Buat setifikat root CA
+* Buat setifikat root CA
    ```bash
    sudo openssl req -new -x509 -keyout ca-root.key -out ca-root.crt -days 365 -subj '/CN=server/OU=FS/O=ADI/L=JAKBA
    R/ST=DKI/C=ID' -passin pass:confluent -passout pass:confluent
    ```
-2. Buat sertifikat key store untuk brokers dengan sertifikat yang ditandatangani oleh CA. Jika menggunakan wildcard (*) hostname, key store yang sama akan bisa digunakan untuk semua brokers.
+* Buat sertifikat key store untuk brokers dengan sertifikat yang ditandatangani oleh CA. Jika menggunakan wildcard (*) hostname, key store yang sama akan bisa digunakan untuk semua brokers.
    ```bash
    sudo keytool -genkey -noprompt -alias server -dname "CN=server,OU=FS,O=ADI,L=JAKBAR,S=DKI,C=ID" -ext "SAN=dns:no
    de1,dns:node2,dns:node3,dns:localhost,dns:node1.zookeeper,dns:node1.kafka,dns:node1.schema,dns:node1.connect,dns:node1.
@@ -116,7 +116,7 @@ Pastikan di file /etc/hosts sudah terdefinisi setiap node beserta toolsnya : <br
    t,dns:node2.cc,dns:node3.zookeeper,dns:node3.kafka,dns:node3.schema,dns:node3.connect,dns:node3.ksql,dns:node3.rest" -k
    eystore kafka.server.keystore.jks -keyalg RSA -storepass confluent -keypass confluent -storetype pkcs12
    ```
-3. Membuat CSR
+* Membuat CSR
   ```bash
   sudo keytool -keystore kafka.server.keystore.jks -alias server -certreq -file server.csr -storepass confluent -k
   eypass confluent -ext "SAN=dns:node1,dns:node2,dns:node3,dns:localhost,dns:node1.zookeeper,dns:node1.kafka,dns:node1.sc
@@ -124,7 +124,7 @@ Pastikan di file /etc/hosts sudah terdefinisi setiap node beserta toolsnya : <br
   nect,dns:node2.ksql,dns:node2.rest,dns:node2.cc,dns:node3.zookeeper,dns:node3.kafka,dns:node3.schema,dns:node3.connect,
   dns:node3.ksql,dns:node3.rest"
   ```
-4. Langkah selanjutnya, buat file server.cnf dengan isi :
+* Langkah selanjutnya, buat file server.cnf dengan isi :
   ```bash
   [req]
   distinguished_name = req_distinguished_name
@@ -156,27 +156,27 @@ Pastikan di file /etc/hosts sudah terdefinisi setiap node beserta toolsnya : <br
   DNS.18 = node3.ksql
   DNS.19 = node3.rest
   ```
-5. Buat sertifikat SSL/TLS yang ditandatangani untuk server Kafka berdasarkan CSR yang telah dibuat sebelumnya
+* Buat sertifikat SSL/TLS yang ditandatangani untuk server Kafka berdasarkan CSR yang telah dibuat sebelumnya
   ```bash
    sudo openssl x509 -req -CA ca-root.crt -CAkey ca-root.key -in server.csr -out server-signed.crt -sha256 -days 365 -CAcreateserial -passin pass:confluent -extensions v3_req -extfile server.cnf
    ```
-6. Import CA ke keystore java
+* Import CA ke keystore java
   ```bash
 sudo keytool -noprompt -keystore server.keystore.jks -alias caroot -import -file ca-root.crt -storepass confluent -keypass confluent
 ```
-7. Menggabungkan kedua file tersebut ke full-chain.xrt
+* Menggabungkan kedua file tersebut ke full-chain.xrt
    ```bash
    sudo sh -c 'cat server-signed.crt ca-root.crt > full-chain.crt'
    ```
-8. Import sertifikat ke keystore java
+* Import sertifikat ke keystore java
   ```bash
   sudo keytool -noprompt -keystore kafka.server.keystore.jks -alias server -import -file full-chain.crt -storepass confluent -keypass confluent
   ```
-9. Impor sertifikat root Certificate Authority (CA) ke dalam truststore Java
+* Impor sertifikat root Certificate Authority (CA) ke dalam truststore Java
     ```bash
  sudo keytool -noprompt -keystore kafka.server.truststore.jks -alias caroot -import -file ca-root.crt -storepass confluent -keypass confluent
     ```
-11. Salin files tersebut ke beberapa brokers dengan perintah :
+* Salin files tersebut ke beberapa brokers dengan perintah :
   ```bash
    scp -r confluent@<alamat_ip>:/var/ssl/private /var/ssl/private
    ```
@@ -194,6 +194,15 @@ sudo chmod -R 755 /dataku/zookeeper
 Khusus untuk zookeeper, tambahkan file berikut yang berisi nomor dari node sekarang
 ```bash
 touch /data/zookeeper/myid
+```
+
+Penjelasan lebih lanjut terkait properties yang digunakan dalam services, ssl.properties merupakan properties yang wajib digunakan. Ketika kita sudah memasang keystore dan trustore, maka kita harus menyertakan properties berikut untuk komunikasi inter-broker atau jika autentikasi client diperbolehkan.
+
+```bash
+ssl.keyStore.location=/var/ssl/private/kafka.server.keystore.jks
+ssl.keyStore.password=confluent
+ssl.trustStore.location=/var/ssl/private/kafka.server.truststore.jks
+ssl.trustStore.password=confluent
 ```
 
 ### Zookeeper
