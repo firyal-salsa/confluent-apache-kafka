@@ -181,42 +181,29 @@ sudo keytool -noprompt -keystore server.keystore.jks -alias caroot -import -file
    scp -r confluent@<alamat_ip>:/var/ssl/private /var/ssl/private
    ```
 
-### Zookeeper
+## Konfigurasi Services
+Secara keseluruhan, kita akan membuat konfigurasi di dalam path /etc/kafka untuk semua services yang ada. Bisa dilihat [disini](https://github.com/firyal-salsa/confluent-apache-kafka/tree/main/kafka). 
+Setelah membuat files konfigurasi, kita akan membuat folder /dataku dan buat folder-folder services confluent kafka di dalam folder tersebut.
+Tambahkan permission untuk setiap services, contoh untuk zookeeper:
 ```bash
-sudo nano /etc/kafka/zookeeper.properties
+sudo chown -R cp-kafka:confluent /dataku/zookeeper
 ```
-
-Edit file /etc/kafka/zookeeper.properties
-
-Buat file /data1/zookeeper dengan akses sebagai berikut
 ```bash
-sudo chown -R cp-kafka:confluent /data1/kafka
+sudo chmod -R 755 /dataku/zookeeper
 ```
-
-Tambahkan file berikut yang berisi nomor dari node sekarang
+Khusus untuk zookeeper, tambahkan file berikut yang berisi nomor dari node sekarang
 ```bash
 touch /data/zookeeper/myid
 ```
 
-```bash
-systemctl daemon-reload
-```
-```bash
-systemctl start confluent-zookeeper.service
-```
+### Zookeeper
 
 ### Broker
 
-Edit [/etc/kafka/server.properties](https://github.com/firyal-salsa/confluent-apache-kafka/blob/main/kafka/server.properties)
+### Schema Registry
 
-```bash
-sudo chown -R cp-kafka:confluent /data1/kafka
-```
+### Kafka Connect
 
-```bash
-sudo chmod -R 755 /data1/kafka
-```
+### Kafka REST
 
-```bash
-sudo systemctl start confluent-server.service
-```
+
