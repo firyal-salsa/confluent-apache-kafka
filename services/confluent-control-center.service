@@ -1,0 +1,18 @@
+[Unit]
+Description=Confluent Control Center
+Documentation=http://docs.confluent.io/
+After=network.target confluent-kafka.target
+
+[Service]
+Type=simple
+User=cp-control-center
+Group=confluent
+Environment="LOG_DIR=/var/log/confluent/control-center" "CONTROL_CENTER_LOG4J_OPTS=-Dlog4j.configuration=file:/etc/confluent-control-center/log4j-rolling.properties"
+Environment=CONTROL_CENTER_OPTS="-Djava.security.auth.login.config=/etc/kafka/propertyfile.jaas"
+ExecStart=/usr/bin/control-center-start /etc/kafka/control-center-minimal.properties
+TimeoutStopSec=180
+Restart=always
+LimitNOFILE=100000
+
+[Install]
+WantedBy=multi-user.target
