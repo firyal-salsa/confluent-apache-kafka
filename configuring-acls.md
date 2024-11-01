@@ -24,7 +24,7 @@ Seperti yang telah disampaikan sebelumnya bahwa user <b>Alice</b> hanya bisa pro
 ```bash
 kafka-configs --bootstrap-server node2.kafka:9092 --alter --add-config 'SCRAM-SHA-256=<your_password>' --entity-type users --entity-name alice --command-config client.properties
 ```
-* Buat file [alice.properties](https://github.com/firyal-salsa/confluent-apache-kafka/blob/main/kafka/producer.properties) di /etc/kafka/
+* Buat file [producer.properties](https://github.com/firyal-salsa/confluent-apache-kafka/blob/main/kafka/producer.properties) di /etc/kafka/
 * Tambahkan permission WRITE untuk user Alice
 ```bash
 kafka-acls --bootstrap-server node2.kafka:9092 --add --allow-principal User:alice --operation WRITE --topic ACLS --command-config client.properties
