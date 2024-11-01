@@ -203,9 +203,18 @@ ssl.keyStore.password=confluent
 ssl.trustStore.location=/var/ssl/private/kafka.server.truststore.jks
 ssl.trustStore.password=confluent
 ```
-Khusus untuk service zookeeper, kita cukup mendeklarasikan ssl properties seperti diatas, tetapi ada sedikit perbedaan untuk services lain.
+Khusus untuk service zookeeper, kita cukup mendeklarasikan ssl properties seperti diatas untuk keamanan, tetapi ada sedikit perbedaan untuk services lain.
+
+### Zkclient
+Jika zookeeper.properties digunakan untuk mengkonfigurasikan zookeeper itu sendiri, [Zkclient](https://github.com/firyal-salsa/confluent-apache-kafka/blob/main/kafka/Zkclient.properties) adalah pengaturan pada sisi client yang akan berkomunikasi dengan Zookeeper.
+Contohnya jika kita ingin berkomunikasi dengan zookeeper-shell untuk melihat list broker yang sedang aktif
+```bash
+zookeeper-shell node2.zookeeper:2182 -zk-tls-config-file /etc/kafka/Zkclient.properties 
+```
+properties zookeeper.ssl yang terdapat di [Zkclient](https://github.com/firyal-salsa/confluent-apache-kafka/blob/main/kafka/Zkclient.properties) menunjukan bahwa pengaturan SSL tersebut khusus untuk klien yang mengakses server Zookeeper
 
 ### Broker
+Broker memiliki dua peran dalam komunikasi yaitu sebagai client untuk zookeeper dan sebagai server untuk broker lain dan client kafka yang memerlukan enkripsi terpisah, seperti konfigurasi dibawah ini
 ```bash
 #### Kafka broker as server to other broker and client
 zookeeper.clientCnxnSocket=org.apache.zookeeper.ClientCnxnSocketNetty
@@ -219,9 +228,15 @@ ssl.key.password=confluent
 ```
 
 ### Schema Registry
-
-### Kafka Connect
+Di konfigurasi schema registry terdapat properties kafkastore.ssl dan ssl, kafkastore.ssl digunakan untuk komunikasi schema registry dengan broker sebagai menyimpan dan mengambil data schema, sedangkan ssl digunakan untuk mengamankan koneksi klien eksternal seperti producer dan consumer yang terhubung ke schema registry.
+Port 8081 ini berguna untuk https, sedangkan port 8086 untuk http digunakan untuk keperluan debugging atau testing.
 
 ### Kafka REST
+pada properties listeners.https.ssl memungkinkan pengaturan SSL khusus untuk listener HTTPS saja, sedangkan properties ssl atau konfigurasi ssl global berlaku untuk semua listener yang membutuhkan SSL tetapi tida memiliki pengaturan khusus.
+
+### Kafka Connect Distributed
+Pengaturan SSL di bagian listeners.https adalah untuk memastikan bahwa koneksi ke Kafka Connect menggunakan protokol HTTPS yang aman. Dalam Kafka Connect, ada sumber (source connectors) dan penghubung (sink connectors) yang menggunakan produsen untuk mengirim data ke Kafka dan konsumen untuk membaca data dari Kafka. Masing-masing memiliki kebutuhan autentikasi dan keamanan yang berbeda, maka dari itu kita perlu menkonfigurasikan properties producer.ssl dan consumer.ssl.
+
+
 
 
