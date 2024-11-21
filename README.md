@@ -36,3 +36,7 @@ Penggunaan metode SCRAM-SHA-256 sangat cocok digunakan untuk excercise di 3 VM d
 </ol>
 
 ## Kontributor
+<a href = "https://github.com/firyal-salsa/confluent-apache-kafka/contributors">
+  <img src="https://avatars.githubusercontent.com/u/83713045?s=60&amp;v=4" class="avatar avatar-user" alt="Ariifprastiyo" width="38" height="38">
+  <img src="https://avatars.githubusercontent.com/u/55304067?s=60&amp;v=4" class="avatar avatar-user" alt="caandi" width="38" height="38">
+</a>
